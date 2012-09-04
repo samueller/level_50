@@ -2,7 +2,6 @@
 #$LOAD_PATH.unshift File.join(File.expand_path(__FILE__), "..", "..", "lib")
 require 'chingu'
 include Gosu
-include Chingu
 
 class Asteroids < Chingu::Window
   def initialize
@@ -74,7 +73,7 @@ end
 class Bullet < Chingu::GameObject
   traits :collision_detection, :bounding_circle
   def initialize(player)
-    super(image: Image["bullet_small.png"])
+    super(image: Gosu::Image["bullet_small.png"])
     @player = player
     @x = player.x
     @y = player.y
@@ -110,7 +109,7 @@ class Player < Chingu::GameObject
   attr_accessor :score
 
   def initialize
-    super(image: Image["person.png"])
+    super(image: Gosu::Image["person.png"])
     @score = 0
     #@bullets = 0
     #@half_width = (@image.width-25)/2
@@ -158,7 +157,7 @@ end
 class Asteroid < Chingu::GameObject
   traits :collision_detection, :bounding_circle
   def initialize
-    super(image: Image["asteroid.png"])
+    super(image: Gosu::Image["asteroid.png"])
     #@bullets = 0
     #@half_width = (@image.width-25)/2
     #@half_height = (@image.height-3)/2
