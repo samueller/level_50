@@ -1,7 +1,8 @@
 #require 'rubygems' rescue nil
 #$LOAD_PATH.unshift File.join(File.expand_path(__FILE__), "..", "..", "lib")
 require 'chingu'
-include Gosu
+require 'chipmunk'
+#include Gosu
 
 class Asteroids < Chingu::Window
   def initialize
@@ -13,6 +14,9 @@ end
 class Levels < Chingu::GameState
   def initialize
     super
+    @space = CP::Space.new
+    @space.damping = 0.8
+
     $right_edge = $window.width + 50
     $left_edge = -50
     @asteroids = 0
@@ -26,17 +30,18 @@ class Levels < Chingu::GameState
 
   def update
     super
-    Bullet.each_collision(Asteroid) do |bullet, asteroid|
-      asteroid.destroy
-      bullet.destroy
-      @player.score += 1
-      if (@asteroids -= 1) <= 0
-        push_game_state GameOver.new("You won!")
-      end
-    end
-    Player.each_collision(Asteroid) do |player, asteroid|
-      push_game_state GameOver.new("Game Over")
-    end
+    @space.step(1.0/60)
+    #Bullet.each_collision(Asteroid) do |bullet, asteroid|
+    #  asteroid.destroy
+    #  bullet.destroy
+    #  @player.score += 1
+    #  if (@asteroids -= 1) <= 0
+    #    push_game_state GameOver.new("You won!")
+    #  end
+    #end
+    #Player.each_collision(Asteroid) do |player, asteroid|
+    #  push_game_state GameOver.new("Game Over")
+    #end
     $window.caption = "Score: #{@player.score}"
   end
 
@@ -71,7 +76,7 @@ class GameOver < Chingu::GameState
 end
 
 class Bullet < Chingu::GameObject
-  traits :collision_detection, :bounding_circle
+  #traits :collision_detection, :bounding_circle
   def initialize(player)
     super(image: Gosu::Image["bullet_small.png"])
     @player = player
@@ -83,7 +88,7 @@ class Bullet < Chingu::GameObject
     @speed = 8
     @half_width = @image.width/2
     @half_height = @image.height/2
-    cache_bounding_circle
+    #cache_bounding_circle
   end
 
   def update
@@ -104,7 +109,7 @@ class Bullet < Chingu::GameObject
 end
 
 class Player < Chingu::GameObject
-  traits :collision_detection, :bounding_circle
+  #traits :collision_detection, :bounding_circle
   #attr_accessor :bullets
   attr_accessor :score
 
